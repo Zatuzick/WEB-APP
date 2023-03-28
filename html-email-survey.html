@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html amp4email>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+    <script
+      async
+      custom-element="amp-form"
+      src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script>
+    <script
+      async
+      custom-template="amp-mustache"
+      src="https://cdn.ampproject.org/v0/amp-mustache-0.2.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;700&family=Paytone+One&display=swap"
+      rel="stylesheet" /> -->
+    <title>Document</title>
+    <style amp4email-boilerplate>
+      body {
+        visibility: hidden;
+      }
+    </style>
+    <style amp-custom>
+      * {
+        box-sizing: border-box;
+      }
+
+      fieldset {
+        border: none;
+        padding: 0 2px;
+      }
+
+      /* SELECTBOX */
+      select {
+        display: block;
+        width: 100%;
+        height: 40px;
+        padding: 5px 10px;
+        -moz-padding-start: calc(0.75rem - 3px);
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #000;
+        background-image: url(https://newtwb.s3.amazonaws.com/images/gggcomsmt/arrow.svg);
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 15px 9px;
+        border: 1px solid #f87606;
+        border-radius: 5px;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+      }
+
+      select:focus-visible,
+      select:focus {
+        outline: none;
+        border: 1px solid #f87606;
+      }
+
+      .select {
+        margin-top: 5px;
+      }
+
+      /* RATING */
+      .rating {
+        --star-size: 3;
+        /* use CSS variables to calculate dependent dimensions later */
+        padding: 0;
+        /* to prevent flicker when mousing over padding */
+        border: none;
+        /* to prevent flicker when mousing over border */
+        unicode-bidi: bidi-override;
+        direction: rtl;
+        /* for CSS-only style change on hover */
+        text-align: right;
+        /* revert the RTL direction */
+        user-select: none;
+        /* disable mouse/touch selection */
+        font-size: 35px;
+        /* because `var(--star-size)em` would be too good to be true */
+        cursor: pointer;
+        /* disable touch feedback on cursor: pointer - http://stackoverflow.com/q/25704650/1269037 */
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        -webkit-tap-highlight-color: transparent;
+        margin-bottom: 0;
+        height: 30px;
+        line-height: 0.85;
+      }
+
+      /* the stars */
+      .rating > label {
+        display: inline-block;
+        position: relative;
+        width: 25px;
+        height: 24px;
+        background-image: url(https://newtwb.s3.amazonaws.com/images/gggcomsmt/start.svg);
+        background-position: 0 0;
+        background-repeat: no-repeat;
+        background-size: contain;
+      }
+
+      .rating > *:hover,
+      .rating > *:hover ~ label,
+      .rating:not(:hover) > input:checked ~ label {
+        color: transparent;
+        /* reveal the contour/white star from the HTML markup */
+        cursor: inherit;
+        /* avoid a cursor transition from arrow/pointer to text selection */
+      }
+
+      .rating > *:hover:before,
+      .rating > *:hover ~ label:before,
+      .rating:not(:hover) > input:checked ~ label:before {
+        content: "";
+        position: absolute;
+        left: 0;
+        width: 25px;
+        height: 24px;
+        background-image: url(https://newtwb.s3.amazonaws.com/images/gggcomsmt/start_checked.svg);
+        background-position: 0 0;
+        background-repeat: no-repeat;
+        background-size: contain;
+      }
+
+      .rating > input {
+        position: relative;
+        transform: scale(1);
+        top: -4px;
+        margin-left: -30px;
+        z-index: 2;
+        opacity: 0;
+        font-size: initial;
+      }
+
+      /* CHECKBOXES */
+      .container {
+        display: block;
+        position: relative;
+        padding-left: 35px;
+        margin-bottom: 15px;
+        cursor: pointer;
+        font-size: 15px;
+        line-height: 20px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      /* Hide the browser's default checkbox */
+      .container input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+      }
+
+      /* Create a custom checkbox */
+      .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 20px;
+        width: 20px;
+        background-color: #fff;
+        border: 1px solid #f87606;
+        border-radius: 5px;
+      }
+
+      /* On mouse-over, add a grey background color */
+      .container:hover input ~ .checkmark {
+        background-color: #fdf4d5;
+      }
+
+      /* When the checkbox is checked, add a blue background */
+      .container input:checked ~ .checkmark {
+        background-color: #f87606;
+      }
+
+      /* Create the checkmark/indicator (hidden when not checked) */
+      .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+      }
+
+      /* Show the checkmark when checked */
+      .container input:checked ~ .checkmark:after {
+        display: block;
+      }
+
+      /* Style the checkmark/indicator */
+      .container .checkmark:after {
+        left: 1px;
+        top: 2px;
+        width: 16px;
+        height: 14px;
+        background-image: url(https://newtwb.s3.amazonaws.com/images/gggcomsmt/checkmark.svg);
+        background-position: 0 0;
+        background-repeat: no-repeat;
+        background-size: contain;
+      }
+
+      .f-title {
+        font-family: "Paytone One", sans-serif;
+        font-weight: 400;
+      }
+
+      .d-flex {
+        display: flex;
+      }
+
+      body {
+        font-family: "Nunito", sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+        color: #000;
+      }
+
+      .page {
+        width: 390px;
+        min-height: 100px;
+        margin: 0 auto;
+        padding: 15px;
+        background-image: url(https://newtwb.s3.amazonaws.com/images/gggcomsmt/grid.png);
+        background-repeat: repeat-y;
+        background-size: 100%;
+        background-position: 0 0;
+      }
+
+      .content {
+        background-color: #fdf4d5;
+        border-radius: 20px;
+        padding: 30px 8px;
+      }
+
+      .logo {
+        align-items: center;
+        flex-direction: column;
+      }
+
+      .title h1 {
+        font-size: 25px;
+        line-height: 35px;
+        color: #f87606;
+        text-align: center;
+        text-transform: uppercase;
+        margin: 30px auto;
+      }
+
+      .txt {
+        text-align: center;
+        color: #f87606;
+        font-weight: 700;
+        line-height: 19px;
+        margin: 20px auto;
+      }
+
+      .ratingboxes .txt {
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 18px;
+      }
+
+      .survey {
+        margin-top: 35px;
+      }
+
+      .survey h5 {
+        font-size: 15px;
+        font-weight: 700;
+        line-height: 20px;
+        margin: 0 auto 10px;
+      }
+
+      .question {
+        margin-bottom: 30px;
+      }
+
+      .question ul {
+        margin: 0 auto;
+        padding: 0;
+      }
+
+      .question ul li {
+        margin-bottom: 15px;
+      }
+
+      .ratingtext {
+        font-size: 15px;
+        font-weight: 500;
+        line-height: 20px;
+        width: 65%;
+        padding-top: 4px;
+        padding-right: 28px;
+      }
+
+      .rating {
+        width: 35%;
+        padding-right: 4px;
+      }
+
+      .textboxes .txt {
+        margin-bottom: 50px;
+      }
+
+      .form-input {
+        margin-bottom: 15px;
+      }
+
+      .form-input .form-label {
+        font-size: 15px;
+        font-weight: 700;
+        line-height: 20px;
+      }
+
+      .form-input .form-inptxt {
+        background-color: #fff;
+        border: 1px solid #f87606;
+        border-radius: 5px;
+        padding: 5px 10px;
+        margin-top: 5px;
+        height: 40px;
+      }
+
+      .flex-row {
+        flex-direction: row;
+      }
+
+      .flex-column {
+        flex-direction: column;
+      }
+
+      .w60 {
+        width: 60%;
+      }
+
+      .w40 {
+        width: 40%;
+      }
+
+      .form-inline.w40 {
+        padding-left: 15px;
+      }
+
+      .btnFinish {
+        text-align: center;
+        margin: 15px auto 0;
+      }
+
+      .btnFinish button {
+        font-weight: 700;
+        font-size: 15px;
+        line-height: 20px;
+        width: 100%;
+        height: 40px;
+        padding: 5px 10px;
+        color: #fff;
+        background-color: #f87606;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .footer {
+        background-color: #fd9301;
+        padding: 15px 0;
+        margin: 0 -15px;
+      }
+      .border-bottom {
+        padding-bottom: 10px;
+        border-bottom: 0.436222px solid #ffffff;
+        justify-content: space-between;
+      }
+      .footer > div {
+        padding: 0 12px;
+      }
+      .info-brand p {
+        margin: 0;
+        color: #fff;
+        font-size: 10px;
+        line-height: 16px;
+      }
+      .info-brand p.txtIntro {
+        font-size: 7.8px;
+        line-height: 8px;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+      .download {
+        margin: 7px 0;
+      }
+      .download a {
+        margin-right: 8px;
+      }
+      .text-center {
+        text-align: center;
+      }
+      .footer .text-center p {
+        font-size: 13px;
+        line-height: 15px;
+        color: #fff;
+        letter-spacing: 0.2px;
+      }
+      .social {
+        justify-content: center;
+      }
+      .social a {
+        margin: 0 8px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="page">
+      <div class="content">
+        <div class="d-flex logo">
+          <amp-img
+            src="https://newtwb.s3.amazonaws.com/images/gggcomsmt/logo.svg"
+            alt="Golden SpoonS"
+            width="79"
+            height="35"></amp-img>
+        </div>
+        <div class="title">
+          <h1 class="f-title">Khảo sát khách hàng</h1>
+          <p class="txt">
+            Golden SpoonS gửi tặng bạn coupon 100,000 VND <br />
+            áp dụng tại hơn 450 nhà hàng toàn quốc sau khi hoàn thành khảo sát.
+          </p>
+          <p class="txt">
+            Hãy cho chúng tôi cơ hội lắng nghe để cung cấp sản phẩm dịch vụ tốt
+            hơn cho bạn trong tương lai. <br />Cảm ơn bạn đã dành thời gian!
+          </p>
+        </div>
+        <div class="survey">
+          <form
+            id="rating"
+            method="post"
+            action-xhr="https://amp.dev/documentation/examples/interactivity-dynamic-content/star_rating/set"
+            target="_blank">
+            <fieldset class="checkboxes">
+              <div class="question">
+                <h5>
+                  1. Lâu rồi bạn chưa tới nhà hàng Golden Gate, lý do là gì?
+                </h5>
+                <label class="container"
+                  >Địa điểm không còn phù hợp, tiện lợi cho tôi
+                  <input type="checkbox" />
+                  <span class="checkmark"></span>
+                </label>
+                <label class="container"
+                  >Tôi chưa sắp xếp được thời gian
+                  <input type="checkbox" />
+                  <span class="checkmark"></span>
+                </label>
+                <label class="container"
+                  >Tôi không đủ ngân sách hoặc dùng chi tiêu cho dịch vụ khác
+                  <input type="checkbox" />
+                  <span class="checkmark"></span>
+                </label>
+                <label class="container"
+                  >Tôi chuyển sang sử dụng dịch vụ ăn uống của thương hiệu khác
+                  <input type="checkbox" />
+                  <span class="checkmark"></span>
+                </label>
+                <label class="container"
+                  >Tôi không thấy có chương trình khuyến mại hấp dẫn
+                  <input type="checkbox" />
+                  <span class="checkmark"></span>
+                </label>
+              </div>
+              <div class="question">
+                <h5>2. Bạn muốn nhận thông tin qua kênh truyền thông nào?</h5>
+                <label class="container"
+                  >Quảng cáo trên mạng (facebook, tiktok, youtube, báo mạng, tìm
+                  kiếm google...)
+                  <input type="checkbox" />
+                  <span class="checkmark"></span>
+                </label>
+                <label class="container"
+                  >Email từ thương hiệu
+                  <input type="checkbox" />
+                  <span class="checkmark"></span>
+                </label>
+                <label class="container"
+                  >Tin nhắn Zalo
+                  <input type="checkbox" />
+                  <span class="checkmark"></span>
+                </label>
+                <label class="container"
+                  >Tin nhắn mạng xã hội (facebook, instagram,....)
+                  <input type="checkbox" />
+                  <span class="checkmark"></span>
+                </label>
+                <label class="container"
+                  >Tin nhắn OTT (viber, whatsapp, telegram...)
+                  <input type="checkbox" />
+                  <span class="checkmark"></span>
+                </label>
+                <label class="container"
+                  >Thông báo từ ứng dụng (application notification)
+                  <input type="checkbox" />
+                  <span class="checkmark"></span>
+                </label>
+              </div>
+              <div class="question">
+                <h5>3. Sớm nhất bạn sẽ quay lại sử dụng dịch vụ khi nào?</h5>
+                <label class="container"
+                  >Khi sắp xếp được thời gian
+                  <input type="checkbox" />
+                  <span class="checkmark"></span>
+                </label>
+                <label class="container"
+                  >Khi có dịp Lễ Tết, kỷ niệm, sinh nhật
+                  <input type="checkbox" />
+                  <span class="checkmark"></span>
+                </label>
+                <label class="container"
+                  >Khi nhà hàng có món mới, sự kiện trải nghiệm
+                  <input type="checkbox" />
+                  <span class="checkmark"></span>
+                </label>
+                <label class="container"
+                  >Khi có nhà hàng tại địa điểm phù hợp hơn
+                  <input type="checkbox" />
+                  <span class="checkmark"></span>
+                </label>
+                <label class="container"
+                  >Khi có chương trình khuyến mại
+                  <input type="checkbox" />
+                  <span class="checkmark"></span>
+                </label>
+              </div>
+            </fieldset>
+            <fieldset class="ratingboxes">
+              <p class="txt">
+                Bạn vui lòng đánh giá theo thang điểm từ 1-4 (1: không đồng ý,
+                2: không chắc chắn, 3: đồng ý, 4: hơn mong đợi)
+              </p>
+              <div class="question">
+                <h5>
+                  4. Chất lượng ứng dụng (tên cũ: The Golden Spoons, tên mới:
+                  Golden SpoonS)
+                </h5>
+                <ul>
+                  <li class="d-flex">
+                    <div class="ratingtext">Tốc độ tải nhanh, ổn định</div>
+                    <div class="rating">
+                      <input
+                        name="rating4-41"
+                        type="radio"
+                        id="rating4-41"
+                        value="4"
+                        on="change:rating.submit" />
+                      <label for="rating4-41" title="4 stars"></label>
+
+                      <input
+                        name="rating3-41"
+                        type="radio"
+                        id="rating3-41"
+                        value="3"
+                        on="change:rating.submit" />
+                      <label for="rating3-41" title="3 stars"></label>
+
+                      <input
+                        name="rating2-41"
+                        type="radio"
+                        id="rating2-41"
+                        value="2"
+                        on="change:rating.submit" />
+                      <label for="rating2-41" title="2 stars"></label>
+
+                      <input
+                        name="rating1-41"
+                        type="radio"
+                        id="rating1-41"
+                        value="1"
+                        on="change:rating.submit" />
+                      <label for="rating1-41" title="1 stars"></label>
+                    </div>
+                  </li>
+                  <li class="d-flex">
+                    <div class="ratingtext">Hiển thị rõ ràng, dễ thao tác</div>
+                    <div class="rating">
+                      <input
+                        name="rating4-42"
+                        type="radio"
+                        id="rating4-42"
+                        value="4"
+                        on="change:rating.submit" />
+                      <label for="rating4-42" title="4 stars"></label>
+
+                      <input
+                        name="rating3-42"
+                        type="radio"
+                        id="rating3-42"
+                        value="3"
+                        on="change:rating.submit" />
+                      <label for="rating3-42" title="3 stars"></label>
+
+                      <input
+                        name="rating2-42"
+                        type="radio"
+                        id="rating2-42"
+                        value="2"
+                        on="change:rating.submit" />
+                      <label for="rating2-42" title="2 stars"></label>
+
+                      <input
+                        name="rating1-42"
+                        type="radio"
+                        id="rating1-42"
+                        value="1"
+                        on="change:rating.submit" />
+                      <label for="rating1-42" title="1 stars"></label>
+                    </div>
+                  </li>
+                  <li class="d-flex">
+                    <div class="ratingtext">
+                      Tính năng thanh toán & tích điểm
+                    </div>
+                    <div class="rating">
+                      <input
+                        name="rating4-43"
+                        type="radio"
+                        id="rating4-43"
+                        value="4"
+                        on="change:rating.submit" />
+                      <label for="rating4-43" title="4 stars"></label>
+
+                      <input
+                        name="rating3-43"
+                        type="radio"
+                        id="rating3-43"
+                        value="3"
+                        on="change:rating.submit" />
+                      <label for="rating3-43" title="3 stars"></label>
+
+                      <input
+                        name="rating2-43"
+                        type="radio"
+                        id="rating2-43"
+                        value="2"
+                        on="change:rating.submit" />
+                      <label for="rating2-43" title="2 stars"></label>
+
+                      <input
+                        name="rating1-43"
+                        type="radio"
+                        id="rating1-43"
+                        value="1"
+                        on="change:rating.submit" />
+                      <label for="rating1-43" title="1 stars"></label>
+                    </div>
+                  </li>
+                  <li class="d-flex">
+                    <div class="ratingtext">Tính năng đặt bàn</div>
+                    <div class="rating">
+                      <input
+                        name="rating4-44"
+                        type="radio"
+                        id="rating4-44"
+                        value="4"
+                        on="change:rating.submit" />
+                      <label for="rating4-44" title="4 stars"></label>
+
+                      <input
+                        name="rating3-44"
+                        type="radio"
+                        id="rating3-44"
+                        value="3"
+                        on="change:rating.submit" />
+                      <label for="rating3-44" title="3 stars"></label>
+
+                      <input
+                        name="rating2-44"
+                        type="radio"
+                        id="rating2-44"
+                        value="2"
+                        on="change:rating.submit" />
+                      <label for="rating2-44" title="2 stars"></label>
+
+                      <input
+                        name="rating1-44"
+                        type="radio"
+                        id="rating1-44"
+                        value="1"
+                        on="change:rating.submit" />
+                      <label for="rating1-44" title="1 stars"></label>
+                    </div>
+                  </li>
+                  <li class="d-flex">
+                    <div class="ratingtext">Tính năng đổi voucher</div>
+                    <div class="rating">
+                      <input
+                        name="rating4-45"
+                        type="radio"
+                        id="rating4-45"
+                        value="4"
+                        on="change:rating.submit" />
+                      <label for="rating4-45" title="4 stars"></label>
+
+                      <input
+                        name="rating3-45"
+                        type="radio"
+                        id="rating3-45"
+                        value="3"
+                        on="change:rating.submit" />
+                      <label for="rating3-45" title="3 stars"></label>
+
+                      <input
+                        name="rating2-45"
+                        type="radio"
+                        id="rating2-45"
+                        value="2"
+                        on="change:rating.submit" />
+                      <label for="rating2-45" title="2 stars"></label>
+
+                      <input
+                        name="rating1-45"
+                        type="radio"
+                        id="rating1-45"
+                        value="1"
+                        on="change:rating.submit" />
+                      <label for="rating1-45" title="1 stars"></label>
+                    </div>
+                  </li>
+                  <li class="d-flex">
+                    <div class="ratingtext">
+                      Cung cấp thông tin: Tin tức và Chương trình khuyến mại
+                    </div>
+                    <div class="rating">
+                      <input
+                        name="rating4-46"
+                        type="radio"
+                        id="rating4-46"
+                        value="4"
+                        on="change:rating.submit" />
+                      <label for="rating4-46" title="4 stars"></label>
+
+                      <input
+                        name="rating3-46"
+                        type="radio"
+                        id="rating3-46"
+                        value="3"
+                        on="change:rating.submit" />
+                      <label for="rating3-46" title="3 stars"></label>
+
+                      <input
+                        name="rating2-46"
+                        type="radio"
+                        id="rating2-46"
+                        value="2"
+                        on="change:rating.submit" />
+                      <label for="rating2-46" title="2 stars"></label>
+
+                      <input
+                        name="rating1-46"
+                        type="radio"
+                        id="rating1-46"
+                        value="1"
+                        on="change:rating.submit" />
+                      <label for="rating1-46" title="1 stars"></label>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="question">
+                <h5>5. Chất lượng sản phẩm</h5>
+                <ul>
+                  <li class="d-flex">
+                    <div class="ratingtext">
+                      Thực phẩm & nguyên liệu tươi ngon
+                    </div>
+                    <div class="rating">
+                      <input
+                        name="rating4-51"
+                        type="radio"
+                        id="rating4-51"
+                        value="4"
+                        on="change:rating.submit" />
+                      <label for="rating4-51" title="4 stars"></label>
+
+                      <input
+                        name="rating3-51"
+                        type="radio"
+                        id="rating3-51"
+                        value="3"
+                        on="change:rating.submit" />
+                      <label for="rating3-51" title="3 stars"></label>
+
+                      <input
+                        name="rating2-51"
+                        type="radio"
+                        id="rating2-51"
+                        value="2"
+                        on="change:rating.submit" />
+                      <label for="rating2-51" title="2 stars"></label>
+
+                      <input
+                        name="rating1-51"
+                        type="radio"
+                        id="rating1-51"
+                        value="1"
+                        on="change:rating.submit" />
+                      <label for="rating1-51" title="1 stars"></label>
+                    </div>
+                  </li>
+                  <li class="d-flex">
+                    <div class="ratingtext">Tẩm ướp, chế biến hợp khẩu vị</div>
+                    <div class="rating">
+                      <input
+                        name="rating4-52"
+                        type="radio"
+                        id="rating4-52"
+                        value="4"
+                        on="change:rating.submit" />
+                      <label for="rating4-52" title="4 stars"></label>
+
+                      <input
+                        name="rating3-52"
+                        type="radio"
+                        id="rating3-52"
+                        value="3"
+                        on="change:rating.submit" />
+                      <label for="rating3-52" title="3 stars"></label>
+
+                      <input
+                        name="rating2-52"
+                        type="radio"
+                        id="rating2-52"
+                        value="2"
+                        on="change:rating.submit" />
+                      <label for="rating2-52" title="2 stars"></label>
+
+                      <input
+                        name="rating1-52"
+                        type="radio"
+                        id="rating1-52"
+                        value="1"
+                        on="change:rating.submit" />
+                      <label for="rating1-52" title="1 stars"></label>
+                    </div>
+                  </li>
+                  <li class="d-flex">
+                    <div class="ratingtext">Trình bày đẹp mắt, hấp dẫn</div>
+                    <div class="rating">
+                      <input
+                        name="rating4-53"
+                        type="radio"
+                        id="rating4-53"
+                        value="4"
+                        on="change:rating.submit" />
+                      <label for="rating4-53" title="4 stars"></label>
+
+                      <input
+                        name="rating3-53"
+                        type="radio"
+                        id="rating3-53"
+                        value="3"
+                        on="change:rating.submit" />
+                      <label for="rating3-53" title="3 stars"></label>
+
+                      <input
+                        name="rating2-53"
+                        type="radio"
+                        id="rating2-53"
+                        value="2"
+                        on="change:rating.submit" />
+                      <label for="rating2-53" title="2 stars"></label>
+
+                      <input
+                        name="rating1-53"
+                        type="radio"
+                        id="rating1-53"
+                        value="1"
+                        on="change:rating.submit" />
+                      <label for="rating1-53" title="1 stars"></label>
+                    </div>
+                  </li>
+                  <li class="d-flex">
+                    <div class="ratingtext">Món ăn đa dạng, phong phú</div>
+                    <div class="rating">
+                      <input
+                        name="rating4-54"
+                        type="radio"
+                        id="rating4-54"
+                        value="4"
+                        on="change:rating.submit" />
+                      <label for="rating4-54" title="4 stars"></label>
+
+                      <input
+                        name="rating3-54"
+                        type="radio"
+                        id="rating3-54"
+                        value="3"
+                        on="change:rating.submit" />
+                      <label for="rating3-54" title="3 stars"></label>
+
+                      <input
+                        name="rating2-54"
+                        type="radio"
+                        id="rating2-54"
+                        value="2"
+                        on="change:rating.submit" />
+                      <label for="rating2-54" title="2 stars"></label>
+
+                      <input
+                        name="rating1-54"
+                        type="radio"
+                        id="rating1-54"
+                        value="1"
+                        on="change:rating.submit" />
+                      <label for="rating1-54" title="1 stars"></label>
+                    </div>
+                  </li>
+                  <li class="d-flex">
+                    <div class="ratingtext">
+                      Chất lượng đồng đều ở tất cả chi nhánh
+                    </div>
+                    <div class="rating">
+                      <input
+                        name="rating4-55"
+                        type="radio"
+                        id="rating4-55"
+                        value="4"
+                        on="change:rating.submit" />
+                      <label for="rating4-55" title="4 stars"></label>
+
+                      <input
+                        name="rating3-55"
+                        type="radio"
+                        id="rating3-55"
+                        value="3"
+                        on="change:rating.submit" />
+                      <label for="rating3-55" title="3 stars"></label>
+
+                      <input
+                        name="rating2-55"
+                        type="radio"
+                        id="rating2-55"
+                        value="2"
+                        on="change:rating.submit" />
+                      <label for="rating2-55" title="2 stars"></label>
+
+                      <input
+                        name="rating1-55"
+                        type="radio"
+                        id="rating1-55"
+                        value="1"
+                        on="change:rating.submit" />
+                      <label for="rating1-55" title="1 stars"></label>
+                    </div>
+                  </li>
+                  <li class="d-flex">
+                    <div class="ratingtext">
+                      Chất lượng tương xứng với giá thành
+                    </div>
+                    <div class="rating">
+                      <input
+                        name="rating4-56"
+                        type="radio"
+                        id="rating4-56"
+                        value="4"
+                        on="change:rating.submit" />
+                      <label for="rating4-56" title="4 stars"></label>
+
+                      <input
+                        name="rating3-56"
+                        type="radio"
+                        id="rating3-56"
+                        value="3"
+                        on="change:rating.submit" />
+                      <label for="rating3-56" title="3 stars"></label>
+
+                      <input
+                        name="rating2-56"
+                        type="radio"
+                        id="rating2-56"
+                        value="2"
+                        on="change:rating.submit" />
+                      <label for="rating2-56" title="2 stars"></label>
+
+                      <input
+                        name="rating1-56"
+                        type="radio"
+                        id="rating1-56"
+                        value="1"
+                        on="change:rating.submit" />
+                      <label for="rating1-56" title="1 stars"></label>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="question">
+                <h5>6. Chất lượng dịch vụ</h5>
+                <ul>
+                  <li class="d-flex">
+                    <div class="ratingtext">
+                      Món ăn luôn đầy đủ, sẵn sàng phục vụ
+                    </div>
+                    <div class="rating">
+                      <input
+                        name="rating4-61"
+                        type="radio"
+                        id="rating4-61"
+                        value="4"
+                        on="change:rating.submit" />
+                      <label for="rating4-61" title="4 stars"></label>
+
+                      <input
+                        name="rating3-61"
+                        type="radio"
+                        id="rating3-61"
+                        value="3"
+                        on="change:rating.submit" />
+                      <label for="rating3-61" title="3 stars"></label>
+
+                      <input
+                        name="rating2-61"
+                        type="radio"
+                        id="rating2-61"
+                        value="2"
+                        on="change:rating.submit" />
+                      <label for="rating2-61" title="2 stars"></label>
+
+                      <input
+                        name="rating1-61"
+                        type="radio"
+                        id="rating1-61"
+                        value="1"
+                        on="change:rating.submit" />
+                      <label for="rating1-61" title="1 stars"></label>
+                    </div>
+                  </li>
+                  <li class="d-flex">
+                    <div class="ratingtext">
+                      Món ăn được phục vụ nhanh chóng
+                    </div>
+                    <div class="rating">
+                      <input
+                        name="rating4-62"
+                        type="radio"
+                        id="rating4-62"
+                        value="4"
+                        on="change:rating.submit" />
+                      <label for="rating4-62" title="4 stars"></label>
+
+                      <input
+                        name="rating3-62"
+                        type="radio"
+                        id="rating3-62"
+                        value="3"
+                        on="change:rating.submit" />
+                      <label for="rating3-62" title="3 stars"></label>
+
+                      <input
+                        name="rating2-62"
+                        type="radio"
+                        id="rating2-62"
+                        value="2"
+                        on="change:rating.submit" />
+                      <label for="rating2-62" title="2 stars"></label>
+
+                      <input
+                        name="rating1-62"
+                        type="radio"
+                        id="rating1-62"
+                        value="1"
+                        on="change:rating.submit" />
+                      <label for="rating1-62" title="1 stars"></label>
+                    </div>
+                  </li>
+                  <li class="d-flex">
+                    <div class="ratingtext">
+                      Được tư vấn lựa chọn món ăn phù hợp
+                    </div>
+                    <div class="rating">
+                      <input
+                        name="rating4-63"
+                        type="radio"
+                        id="rating4-63"
+                        value="4"
+                        on="change:rating.submit" />
+                      <label for="rating4-63" title="4 stars"></label>
+
+                      <input
+                        name="rating3-63"
+                        type="radio"
+                        id="rating3-63"
+                        value="3"
+                        on="change:rating.submit" />
+                      <label for="rating3-63" title="3 stars"></label>
+
+                      <input
+                        name="rating2-63"
+                        type="radio"
+                        id="rating2-63"
+                        value="2"
+                        on="change:rating.submit" />
+                      <label for="rating2-63" title="2 stars"></label>
+
+                      <input
+                        name="rating1-63"
+                        type="radio"
+                        id="rating1-63"
+                        value="1"
+                        on="change:rating.submit" />
+                      <label for="rating1-63" title="1 stars"></label>
+                    </div>
+                  </li>
+                  <li class="d-flex">
+                    <div class="ratingtext">
+                      Được tư vấn các chương trình khuyến mại, bán hàng hữu ích
+                    </div>
+                    <div class="rating">
+                      <input
+                        name="rating4-64"
+                        type="radio"
+                        id="rating4-64"
+                        value="4"
+                        on="change:rating.submit" />
+                      <label for="rating4-64" title="4 stars"></label>
+
+                      <input
+                        name="rating3-64"
+                        type="radio"
+                        id="rating3-64"
+                        value="3"
+                        on="change:rating.submit" />
+                      <label for="rating3-64" title="3 stars"></label>
+
+                      <input
+                        name="rating2-64"
+                        type="radio"
+                        id="rating2-64"
+                        value="2"
+                        on="change:rating.submit" />
+                      <label for="rating2-64" title="2 stars"></label>
+
+                      <input
+                        name="rating1-64"
+                        type="radio"
+                        id="rating1-64"
+                        value="1"
+                        on="change:rating.submit" />
+                      <label for="rating1-64" title="1 stars"></label>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </fieldset>
+            <fieldset class="textboxes">
+              <p class="txt">
+                Vui lòng điền thông tin để nhận ngay <br />
+                voucher 100,000 VND
+              </p>
+              <div class="form-input d-flex flex-column">
+                <label class="form-label" for="userName">Họ tên</label>
+                <input class="form-inptxt" type="text" id="userName" />
+              </div>
+              <div class="form-input d-flex flex-column">
+                <label class="form-label" for="phoneNumber"
+                  >Số điện thoại</label
+                >
+                <input class="form-inptxt" type="number" id="phoneNumber" />
+              </div>
+              <div class="form-input d-flex flex-row">
+                <div class="form-inline d-flex flex-column w60">
+                  <label class="form-label" for="phoneNumber">Ngày sinh</label>
+                  <input
+                    class="form-inptxt"
+                    type="date"
+                    id="birthday"
+                    placeholder="dd/mm/yy" />
+                </div>
+                <div class="form-inline d-flex flex-column w40">
+                  <label class="form-label" for="gender">Giới tính</label>
+                  <div class="select">
+                    <select name="gender" id="gender">
+                      <option value="0"></option>
+                      <option value="1">Nam</option>
+                      <option value="2">Nữ</option>
+                    </select>
+                    <!-- <span class="focus"></span> -->
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+            <fieldset class="btnFinish">
+              <button type="submit">Hoàn thành khảo sát</button>
+            </fieldset>
+            <!-- <div submit-success>
+                        <template type="amp-mustache">
+                            <p>Thanks for rating {{rating}} star(s)!</p>
+                        </template>
+                    </div>
+                    <div submit-error>
+                        <template type="amp-mustache">
+                            Looks like something went wrong. Please try to rate again. {{error}}
+                        </template>
+                    </div> -->
+          </form>
+        </div>
+      </div>
+      <div class="footer">
+        <div class="d-flex border-bottom">
+          <div class="info-brand">
+            <p class="">
+              <b>Golden SpoonS - Siêu ứng dụng dành cho tín đồ ẩm thực</b>
+              <br />
+              Hotline: <b>1900 6622</b> <br />
+              Email: support.hn@ggg.com.vn
+            </p>
+            <div class="download d-flex flex-row">
+              <a href="https://play.google.com/store/apps/details?id=vn.com.ggg.gpeople&hl=vi&gl=US">
+                <amp-img
+                  src="https://newtwb.s3.amazonaws.com/images/gggcomsmt/ggplay.svg"
+                  alt="Google Play"
+                  width="89"
+                  height="27"></amp-img>
+              </a>
+              <a href="https://apps.apple.com/vn/app/the-golden-spoon/id1141620783?l=vi">
+                <amp-img
+                  src="https://newtwb.s3.amazonaws.com/images/gggcomsmt/appstore.svg"
+                  alt="App Store"
+                  width="89"
+                  height="27"></amp-img>
+              </a>
+            </div>
+            <p class="txtIntro">
+              Hoàn tiền tới 15% &nbsp; | &nbsp;Ưu đãi từ hơn 450+ nhà hàng
+              &nbsp; | &nbsp;Đặt bàn dễ dàng
+            </p>
+          </div>
+          <div class="qrcode">
+            <amp-img
+              src="https://newtwb.s3.amazonaws.com/images/gggcomsmt/qrcode.svg"
+              alt="App Store"
+              width="85"
+              height="103"></amp-img>
+          </div>
+        </div>
+        <div class="d-flex flex-column text-center">
+          <p><b>Nâng cấp ngay để tận hưởng ngàn ưu đãi hấp dẫn!</b></p>
+          <div class="social d-flex flex-row">
+            <a href="https://goldenspoons.com.vn">
+              <amp-img
+                src="https://newtwb.s3.amazonaws.com/images/gggcomsmt/global.svg"
+                alt="global"
+                width="36"
+                height="37"></amp-img>
+            </a>
+            <a href="https://www.facebook.com/goldenspoons.ggg/">
+              <amp-img
+                src="https://newtwb.s3.amazonaws.com/images/gggcomsmt/facebook.svg"
+                alt="global"
+                width="36"
+                height="37"></amp-img>
+            </a>
+            <a href="https://zalo.me/1016858729817056214">
+              <amp-img
+                src="https://newtwb.s3.amazonaws.com/images/gggcomsmt/zalo.svg"
+                alt="global"
+                width="36"
+                height="37"></amp-img>
+            </a>
+            <a href="https://www.instagram.com/goldenspoons.ggg/">
+              <amp-img
+                src="https://newtwb.s3.amazonaws.com/images/gggcomsmt/instagram.svg"
+                alt="global"
+                width="36"
+                height="37"></amp-img>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
